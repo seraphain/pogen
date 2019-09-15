@@ -1,0 +1,62 @@
+{
+    "jdbcTypes": {
+        "tinyint": "TINYINT",
+        "int": "INTEGER",
+        "bigint": "BIGINT",
+        "varchar": "VARCHAR",
+        "text": "VARCHAR",
+        "date": "DATE",
+        "time": "TIME",
+        "datetime": "DATETIME",
+        "timestamp": "TIMESTAMP",
+        "decimal": "DECIMAL"
+    },
+    "javaTypePrimitive":{
+        "tinyint": "int",
+        "int": "int",
+        "bigint": "long",
+        "decimal": "double"
+    },
+    "javaTypesSimple": {
+        "tinyint": "Integer",
+        "int": "Integer",
+        "bigint": "Long",
+        "varchar": "String",
+        "text": "String",
+        "date": "Date",
+        "time": "Date",
+        "datetime": "Date",
+        "timestamp": "Date",
+        "decimal": "Double"
+    },
+    "javaTypesFull": {
+        "tinyint": "java.lang.Integer",
+        "int": "java.lang.Integer",
+        "bigint": "java.lang.Long",
+        "varchar": "java.lang.String",
+        "text": "java.lang.String",
+        "date": "java.util.Date",
+        "time": "java.util.Date",
+        "datetime": "java.util.Date",
+        "timestamp": "java.util.Date",
+        "decimal": "java.lang.Double"
+    },
+    "javaTypesImport": {
+        "date": "java.util.Date",
+        "time": "java.util.Date",
+        "datetime": "java.util.Date",
+        "timestamp": "java.util.Date"
+    },
+    "javaTypesResultSet": {
+        "tinyint": "Int",
+        "int": "Int",
+        "bigint": "Long",
+        "varchar": "String",
+        "text": "String",
+        "date": "Date",
+        "time": "Date",
+        "datetime": "Date",
+        "timestamp": "Date",
+        "decimal": "Double"
+    }
+}

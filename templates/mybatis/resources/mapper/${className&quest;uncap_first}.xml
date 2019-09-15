@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${packageBase}.po.${className}PO">
+
+    <resultMap id="${className?uncap_first}ResultMap" type="${packageBase}.po.${className}">
+<#list columns as column>
+        <result property="${column.attributeName}" column="${column.columnName} jdbcType="${column.jdbcType}"/>
+</#list>
+    </resultMap>
+
+    <!-- all columns -->
+    <sql id="all${className}Columns">
+        <#list columns as column>${column.columnName}<#sep>, </#sep></#list>
+    </sql>
+
+    <insert id="create${className}" parameterType="${packageBase}.po.${className}">
+        INSERT INTO ${tableName}
+        (<include refid="ColumnList" />)
+        VALUES
+        (<#list columns as column>${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>)
+        <#if idColumns?size == 1 && idColumns[0].autoIncrement>
+        <selectKey keyProperty="${idColumns[0].attributeName}" resultType="${idColumn.javaTypeFull}" order="AFTER">
+            <choose>
+                <when test="${idColumns[0].attributeName} == null">SELECT LAST_INSERT_ID();</when>
+                <otherwise>SELECT ${"#"}{${idColumns[0].attributeName},jdbcType=${idColumns[0].jdbcType}};</otherwise>
+            </choose>
+        </selectKey>
+        </#if>
+    </insert>
+
+    <insert id="createIfNotExist${className}" parameterType="${packageBase}.po.${className}">
+        INSERT INTO ${tableName}
+        (<include refid="ColumnList" />)
+        VALUES
+        (<#list columns as column>${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>)
+        ON DUPLICATE KEY UPDATE <#list idColumns as column>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>;
+        <#if idColumns?size == 1 && idColumns[0].autoIncrement>
+        <selectKey keyProperty="${idColumns[0].attributeName}" resultType="${idColumn.javaTypeFull}" order="AFTER">
+            <choose>
+                <when test="${idColumns[0].attributeName} == null">SELECT LAST_INSERT_ID();</when>
+                <otherwise>SELECT ${"#"}{${idColumns[0].attributeName},jdbcType=${idColumns[0].jdbcType}};</otherwise>
+            </choose>
+        </selectKey>
+        </#if>
+    </insert>
+
+    <insert id="createOrUpdate${className}" parameterType="${packageBase}.po.${className}">
+        INSERT INTO ${tableName}
+        (<include refid="ColumnList" />)
+        VALUES
+        (<#list columns as column>${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>)
+        ON DUPLICATE KEY UPDATE <#list nonIdColumns as column>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>;
+        <#if idColumns?size == 1 && idColumns[0].autoIncrement>
+        <selectKey keyProperty="${idColumns[0].attributeName}" resultType="${idColumn.javaTypeFull}" order="AFTER">
+            <choose>
+                <when test="${idColumns[0].attributeName} == null">SELECT LAST_INSERT_ID();</when>
+                <otherwise>SELECT ${"#"}{${idColumns[0].attributeName},jdbcType=${idColumns[0].jdbcType}};</otherwise>
+            </choose>
+        </selectKey>
+        </#if>
+    </insert>
+
+    <update id="update${className}" parameterType="${packageBase}.po.${className}">
+        UPDATE ${tableName}
+        <set>
+        <#list nonIdColumns as column>
+        ${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>,</#sep>
+        </#list>
+        </set>
+        <where>
+        <#list idColumns as column>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep> AND </#sep></#list>
+        </where>
+    </update>
+
+    <delete id="delete${className}" parameterType="${packageBase}.po.${className}">
+        DELETE FROM ${tableName}
+        <where>
+        <#list idColumns as column>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep> AND </#sep></#list>
+        </where>
+    </delete>
+
+    <delete id="delete${className}ById" parameterType="<#if idColumns?size == 1><#if idColumns[0].primary>${idColumns[0].javaTypePrimitive}<#else>${idColumns[0].javaTypeFull}</#if><#else>java.util.Map</#if>">
+        DELETE FROM ${tableName}
+        <where>
+        <#list idColumns as column>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep> AND </#sep></#list>
+        </where>
+    </delete>
+
+<#if idColumns?size == 1>
+    <delete id="delete${className}ByIds" parameterType="java.util.List" resultMap="${className?uncap_first}ResultMap">
+        DELETE FROM ${tableName}
+        <where>
+        ${idColumns[0].columnName} IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">${"#"}{item}</foreach>
+        </where>
+    </delete>
+
+</#if>
+    <select id="get${className}ById" parameterType="<#if idColumns?size == 1><#if idColumns[0].primary>${idColumns[0].javaTypePrimitive}<#else>${idColumns[0].javaTypeFull}</#if><#else>java.util.Map</#if>" resultMap="${className?uncap_first}ResultMap">
+        SELECT  
+        <include refid="all${className}Columns"/>
+        FROM ${tableName}
+        <where>
+        <#list idColumns as column>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep> AND </#sep></#list>
+        </where>
+    </select>
+
+<#if idColumns?size == 1>
+    <select id="get${className}ByIds" parameterType="java.util.List" resultMap="${className?uncap_first}ResultMap">
+        SELECT  
+        <include refid="all${className}Columns"/>
+        FROM ${tableName}
+        <where>
+        ${idColumns[0].columnName} IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">${"#"}{item}</foreach>
+        </where>
+    </select>
+
+</#if>
+    <select id="search${className}" parameterType="java.util.Map" resultMap="${className?uncap_first}ResultMap">
+        SELECT  
+        <include refid="all${className}Columns"/>
+        FROM ${tableName}
+        <where>
+<#list columns as column>
+            <if test="${column.attributeName} != null">
+                <#if !column?is_first>AND </#if>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}
+            </if>
+</#list>
+        </where>
+        <if test="orderBy != null">
+            ORDER BY ${"$"}{orderBy}
+        </if>
+        <if test="limit != null">
+            LIMIT ${"#"}{limit}<if test="offset != null"> OFFSET ${"#"}{offset}</if>
+        </if>
+    </select>
+
+    <select id="count${className}" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM ${tableName}
+        <where>
+<#list columns as column>
+            <if test="${column.attributeName} != null">
+                <#if !column?is_first>AND </#if>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}
+            </if>
+</#list>
+        </where>
+    </select>
+
+</mapper>
