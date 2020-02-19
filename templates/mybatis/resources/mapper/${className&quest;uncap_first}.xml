@@ -19,7 +19,7 @@
         VALUES
         (<#list columns as column>${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>)
         <#if idColumns?size == 1 && idColumns[0].autoIncrement>
-        <selectKey keyProperty="${idColumns[0].attributeName}" resultType="${idColumn.javaTypeFull}" order="AFTER">
+        <selectKey keyProperty="${idColumns[0].attributeName}" resultType="${idColumns[0].javaTypeFull}" order="AFTER">
             <choose>
                 <when test="${idColumns[0].attributeName} == null">SELECT LAST_INSERT_ID();</when>
                 <otherwise>SELECT ${"#"}{${idColumns[0].attributeName},jdbcType=${idColumns[0].jdbcType}};</otherwise>
@@ -35,7 +35,7 @@
         (<#list columns as column>${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>)
         ON DUPLICATE KEY UPDATE <#list idColumns as column>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>;
         <#if idColumns?size == 1 && idColumns[0].autoIncrement>
-        <selectKey keyProperty="${idColumns[0].attributeName}" resultType="${idColumn.javaTypeFull}" order="AFTER">
+        <selectKey keyProperty="${idColumns[0].attributeName}" resultType="${idColumns[0].javaTypeFull}" order="AFTER">
             <choose>
                 <when test="${idColumns[0].attributeName} == null">SELECT LAST_INSERT_ID();</when>
                 <otherwise>SELECT ${"#"}{${idColumns[0].attributeName},jdbcType=${idColumns[0].jdbcType}};</otherwise>
@@ -51,7 +51,7 @@
         (<#list columns as column>${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>)
         ON DUPLICATE KEY UPDATE <#list nonIdColumns as column>${column.columnName} = ${"#"}{${column.attributeName},jdbcType=${column.jdbcType}}<#sep>, </#sep></#list>;
         <#if idColumns?size == 1 && idColumns[0].autoIncrement>
-        <selectKey keyProperty="${idColumns[0].attributeName}" resultType="${idColumn.javaTypeFull}" order="AFTER">
+        <selectKey keyProperty="${idColumns[0].attributeName}" resultType="${idColumns[0].javaTypeFull}" order="AFTER">
             <choose>
                 <when test="${idColumns[0].attributeName} == null">SELECT LAST_INSERT_ID();</when>
                 <otherwise>SELECT ${"#"}{${idColumns[0].attributeName},jdbcType=${idColumns[0].jdbcType}};</otherwise>

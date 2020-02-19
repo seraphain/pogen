@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 cd "$(dirname $0)"
 
 if [ -n "${JAVA_HOME}" ] && [ -d "${JAVA_HOME}" ]; then

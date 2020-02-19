@@ -1,3 +1,4 @@
 {
-    "templates/dautils": "generated/dautils"
+    "templates/mybatis/java": "generated/mybatis/java",
+    "templates/mybatis/resources": "generated/mybatis/resources"
 }
