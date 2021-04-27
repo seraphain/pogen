@@ -25,4 +25,4 @@ done
 
 cd "$(dirname "$0")" || exit
 "${JAVA_CMD}" ${JVM_OPTS} -cp "${CLASSPATH}" ${LAUNCHER} "$@"
-cd - || exit
+cd "${OLDPWD}" || exit
